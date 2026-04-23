@@ -21,7 +21,7 @@ It demonstrates a masterclass in modern MLOps by eschewing bloated PyTorch pipel
 ## 🔗 Live Surfaces & Links
 
 - **🚀 Live App (Hugging Face Spaces):** [https://huggingface.co/spaces/saibalajiomg/researchiq](https://huggingface.co/spaces/saibalajiomg/researchiq)
-- **📊 Remote MLflow (DagsHub):** [https://dagshub.com/saibalajinamburi/researchiq](https://dagshub.com/saibalajinamburi/researchiq)
+- **📊 Remote MLflow (DagsHub):** [https://dagshub.com/saibalajinamburi/researchiq/experiments](https://dagshub.com/saibalajinamburi/researchiq/experiments)
 - **💻 Source Code (GitHub):** [https://github.com/saibalajinamburi/researchiq](https://github.com/saibalajinamburi/researchiq)
 
 ---
