@@ -71,12 +71,12 @@ flowchart TD
 
 Building this pipeline required solving several complex, real-world engineering roadblocks:
 
-| Challenge Faced | How We Solved It |
+| Challenge Faced | How I Solved It |
 | :--- | :--- |
-| **Monolithic PyTorch Bloat**<br>Loading standard HuggingFace PyTorch pipelines created 3GB+ virtual environments, making cloud deployment painfully slow and expensive. | **The ONNX Pivot**<br>We completely removed PyTorch from the deployment stack. We utilized a pre-compiled INT8 ONNX MiniLM model and converted our final Scikit-Learn classifier to `.onnx`. This reduced the runtime footprint to just the ONNX Runtime engine, cutting memory by 80% and dropping latency to `<10ms`. |
-| **LaTeX Syntax Destruction**<br>arXiv abstracts are riddled with complex LaTeX mathematical formulas (`$\alpha = \beta^2$`). This appears as random noise to language models, destroying the semantic embedding space. | **Targeted Regex NLP**<br>We engineered a highly robust text-cleaning module (`src/cleaning.py`) that specifically targets and strips inline (`$...$`) and block (`$$...$$`) equations, URLs, and citation artifacts, leaving behind pure semantic English. |
-| **Data Versioning Bloat**<br>Generating 384-dimensional embeddings for 42,000 papers created massive `.npy` matrices that would instantly break GitHub's size limits. | **DVC Integration**<br>We integrated Data Version Control (DVC) to track the heavy dataset artifacts externally, ensuring the main Git repository remained strictly focused on source code. |
-| **Cloud Experiment Tracking**<br>Logging models locally (`.mlruns`) limited reproducibility and prevented the setup of cloud-native CI/CD pipelines. | **DagsHub Remote MLflow**<br>We integrated the training script directly with DagsHub (`dagshub.init`), seamlessly pushing all hyperparameters, metrics, and `.joblib` model weights to a centralized, remote tracking server. |
+| **Monolithic PyTorch Bloat**<br>Loading standard HuggingFace PyTorch pipelines created 3GB+ virtual environments, making cloud deployment painfully slow and expensive. | **The ONNX Pivot**<br>I completely removed PyTorch from the deployment stack. I utilized a pre-compiled INT8 ONNX MiniLM model and converted my final Scikit-Learn classifier to `.onnx`. This reduced the runtime footprint to just the ONNX Runtime engine, cutting memory by 80% and dropping latency to `<10ms`. |
+| **LaTeX Syntax Destruction**<br>arXiv abstracts are riddled with complex LaTeX mathematical formulas (`$\alpha = \beta^2$`). This appears as random noise to language models, destroying the semantic embedding space. | **Targeted Regex NLP**<br>I engineered a highly robust text-cleaning module (`src/cleaning.py`) that specifically targets and strips inline (`$...$`) and block (`$$...$$`) equations, URLs, and citation artifacts, leaving behind pure semantic English. |
+| **Data Versioning Bloat**<br>Generating 384-dimensional embeddings for 42,000 papers created massive `.npy` matrices that would instantly break GitHub's size limits. | **DVC Integration**<br>I integrated Data Version Control (DVC) to track the heavy dataset artifacts externally, ensuring the main Git repository remained strictly focused on source code. |
+| **Cloud Experiment Tracking**<br>Logging models locally (`.mlruns`) limited reproducibility and prevented the setup of cloud-native CI/CD pipelines. | **DagsHub Remote MLflow**<br>I integrated the training script directly with DagsHub (`dagshub.init`), seamlessly pushing all hyperparameters, metrics, and `.joblib` model weights to a centralized, remote tracking server. |
 
 ---
 
@@ -151,12 +151,3 @@ researchiq/
 ├── Dockerfile.streamlit    # Container definition for Streamlit
 └── requirements.txt        # Pinned dependencies
 ```
-
----
-
-## 🌐 Deployment Strategy
-
-ResearchIQ is designed for extreme portability:
-1. **Hugging Face Spaces (Live Demo):** A lean UI-only bundle (`deploy/hf_space`) utilizing direct ONNX inference without requiring a separate backend server. **[Try it live here!](https://huggingface.co/spaces/saibalajiomg/researchiq)**
-2. **Docker / Cloud Run:** Fully containerized `Dockerfile.api` ready for highly scalable, stateless deployment on AWS ECS, Render, or Railway.
-3. **DagsHub:** Acts as the centralized remote MLOps hub for managing experiments, datasets, and model registries.
