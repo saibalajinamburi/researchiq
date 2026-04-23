@@ -1,0 +1,38 @@
+name: ResearchIQ CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Compile source
+        run: |
+          python -m py_compile src/ingestion.py src/eda.py src/preprocess.py src/train.py src/export_onnx.py src/inference.py src/api.py src/streamlit_app.py src/launch.py src/stop_services.py
+
+      - name: Validate shipped serving artifacts
+        run: |
+          test -f models/phase3_final/best_model.joblib
+          test -f models/phase4_onnx/best_model.onnx
+          test -f models/phase4_onnx/phase4_metadata.json
+
+      - name: Build API image
+        run: |
+          docker build -f Dockerfile.api -t researchiq-api .
+
+      - name: Build Streamlit image
+        run: |
+          docker build -f Dockerfile.streamlit -t researchiq-streamlit .

@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      RESEARCHIQ_RATE_LIMIT_PER_MINUTE: "60"
+    ports:
+      - "8000:8000"
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    environment:
+      RESEARCHIQ_API_URL: "http://api:8000"
+      RESEARCHIQ_MLFLOW_URL: "http://localhost:5000"
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.2
+    command: >
+      mlflow ui
+      --backend-store-uri /mlruns
+      --default-artifact-root /mlruns
+      --host 0.0.0.0
+      --port 5000
+    volumes:
+      - ./mlruns:/mlruns
+    ports:
+      - "5000:5000"

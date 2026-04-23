@@ -1,0 +1,6 @@
+model_name,run_id,cv_best_macro_f1,test_macro_f1,best_params
+extra_trees,5d0f6585865f459cba3173bf86b3063a,0.5558087121319734,0.6061400464598742,"{""max_depth"": 30, ""min_samples_leaf"": 4, ""min_samples_split"": 4, ""n_estimators"": 700}"
+logreg_ovr,0c0a666c76fe401798888afdfea7c614,0.548314389106858,0.6042468888504694,"{""estimator__C"": 10.0, ""estimator__penalty"": ""l2""}"
+lightgbm,15b25b6005ee480ea5e854672e52e19a,0.48967042398609073,0.5870698351889073,"{""colsample_bytree"": 0.7, ""learning_rate"": 0.03, ""max_depth"": 30, ""n_estimators"": 700, ""num_leaves"": 63, ""subsample"": 0.7}"
+xgboost,2620dcd778ff4592b7ed7cb9b17d5cae,0.5195887999507401,0.5852696430614052,"{""colsample_bytree"": 0.85, ""learning_rate"": 0.03, ""max_depth"": 10, ""n_estimators"": 500, ""subsample"": 0.7}"
+random_forest,f05535961f964f778346e02ad1a253c8,0.5483370190705195,0.5784264946424269,"{""max_depth"": 30, ""min_samples_leaf"": 4, ""min_samples_split"": 4, ""n_estimators"": 700}"

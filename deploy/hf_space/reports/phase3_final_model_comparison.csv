@@ -1,0 +1,2 @@
+model_name,run_id,cv_best_macro_f1,test_macro_f1,best_params
+logreg_ovr,2ea097cfd2304057a0c98e81582794ee,nan,0.6655150170382823,"{""memory"": null, ""verbose"": false}"

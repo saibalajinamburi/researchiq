@@ -1,0 +1,5 @@
+outs:
+- md5: ec52782375602070ccdecb2d48f2f510
+  size: 502
+  hash: md5
+  path: classes.npy

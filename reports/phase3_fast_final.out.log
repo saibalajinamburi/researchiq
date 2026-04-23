@@ -1,0 +1,17 @@
+[18:56:57] Starting ResearchIQ training
+[18:56:57] Loading processed arrays
+[18:56:57] Loaded X=(42186, 384), y=(42186,), classes=15
+[18:56:57] Creating train/test split with test_size=0.2
+[18:56:57] Split ready: train=33748, test=8438
+[18:56:57] Configuring MLflow experiment: researchiq_phase3_fast_final
+[18:56:57] Building model specifications
+[18:56:57] Model 1/3 START: logreg_ovr
+[18:56:57] [logreg_ovr] fitting fixed quick-final config
+[18:56:59] [logreg_ovr] predicting test split
+[18:56:59] [logreg_ovr] scoring complete: macro_f1=0.6655
+[18:56:59] [logreg_ovr] logging artifacts to MLflow
+[logreg_ovr] cv_best_macro_f1=n/a | test_macro_f1=0.6655
+[18:57:04] Model 1/3 DONE: logreg_ovr | elapsed=7.3s
+[18:57:04] Model 2/3 START: xgboost
+[18:57:04] [xgboost] fitting fixed quick-final config
+[18:59:49] [xgboost] predicting test split

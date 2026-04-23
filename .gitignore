@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+
+.env
+.venv/
+venv/
+.cache/
+.runtime/
+
+data/raw/
+data/processed/*.csv
+data/processed/*.npy
+mlruns/
+
+reports/*.tmp
+
+# Ignore project planning and logging files
+project_log.md
+task.md
+implementation_plan.md
+added_scope.md
+scratch/
+scratch_*.py
+
+# Prevent massive uploads
+.dvc/cache/
+models/

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.cache/
+.runtime/
+.dvc/cache/
+data/raw/
+data/processed/*.csv
+data/processed/*.npy
+mlruns/
+reports/*.log

@@ -1,0 +1,9 @@
+{
+  "updated_at": "2026-04-23 19:00:28",
+  "stage": "finished",
+  "experiment": "researchiq_phase3_final",
+  "best_model": "logreg_ovr",
+  "best_macro_f1": 0.6655150170382823,
+  "comparison_path": "C:\\Users\\saiba\\Documents\\My-Career-Projects\\researchiq\\reports\\phase3_final_model_comparison.csv",
+  "model_dir": "C:\\Users\\saiba\\Documents\\My-Career-Projects\\researchiq\\models\\phase3_final"
+}

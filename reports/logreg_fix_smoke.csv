@@ -1,0 +1,2 @@
+model_name,run_id,cv_best_macro_f1,test_macro_f1,best_params
+logreg_ovr,530c25801d6a43d3b7bd2477c91762dc,0.5486759644667544,0.571546154994431,"{""classifier__C"": 0.1}"
