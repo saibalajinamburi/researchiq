@@ -21,7 +21,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           if [ -z "$HF_TOKEN" ]; then
-            echo "WARNING: HF_TOKEN secret not set - skipping restart check"
+            echo "HF_TOKEN not set - will rely on HTTP pings to wake spaces"
             exit 0
           fi
 
@@ -41,36 +41,55 @@ jobs:
             echo "  Current status: $STATUS"
 
             if [ "$STATUS" != "RUNNING" ]; then
-              echo "  Space is not running ($STATUS). Restarting via API..."
+              echo "  Restarting via API..."
               curl -s -X POST \
                 -H "Authorization: Bearer $HF_TOKEN" \
                 "https://huggingface.co/api/spaces/$SPACE/restart"
-              echo "  Restart request sent. Waiting 30s for boot..."
-              sleep 30
+              echo "  Restart request sent."
             else
-              echo "  Space is running - OK"
+              echo "  Already running."
             fi
           done
+          # Give spaces time to boot before pinging
+          echo "Waiting 60s for spaces to start..."
+          sleep 60
 
-      - name: Ping CustomerCore
+      - name: Ping and wake CustomerCore
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-customercore.hf.space/api/v1/keep-alive)
-          echo "CustomerCore responded with HTTP code: $RESPONSE"
+          echo "Pinging CustomerCore (with retry for cold start)..."
+          for i in 1 2 3; do
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 120 https://saibalajiomg-customercore.hf.space/api/v1/keep-alive)
+            echo "  Attempt $i: HTTP $RESPONSE"
+            if [ "$RESPONSE" -eq 200 ]; then break; fi
+            echo "  Waiting 30s before retry..."
+            sleep 30
+          done
 
-      - name: Ping SupportPulse
+      - name: Ping and wake SupportPulse
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-supportpulse.hf.space/)
-          echo "SupportPulse responded with HTTP code: $RESPONSE"
+          echo "Pinging SupportPulse (with retry for cold start)..."
+          for i in 1 2 3; do
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 120 https://saibalajiomg-supportpulse.hf.space/)
+            echo "  Attempt $i: HTTP $RESPONSE"
+            if [ "$RESPONSE" -eq 200 ]; then break; fi
+            echo "  Waiting 30s before retry..."
+            sleep 30
+          done
 
-      - name: Ping ResearchIQ
+      - name: Ping and wake ResearchIQ
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-researchiq.hf.space/)
-          echo "ResearchIQ responded with HTTP code: $RESPONSE"
+          echo "Pinging ResearchIQ (with retry for cold start)..."
+          for i in 1 2 3; do
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 120 https://saibalajiomg-researchiq.hf.space/)
+            echo "  Attempt $i: HTTP $RESPONSE"
+            if [ "$RESPONSE" -eq 200 ]; then break; fi
+            echo "  Waiting 30s before retry..."
+            sleep 30
+          done
 
       - name: Prevent GitHub Workflow Suspension
         run: |
-          # On Sundays, write a timestamp and commit it.
-          # This resets GitHub's 60-day inactivity timer for scheduled workflows.
+          # On Sundays, auto-commit to prevent GitHub from suspending this cron after 60 days
           if [ "$(date +%u)" -eq 7 ]; then
             echo "Keep-alive tick: $(date -u)" > keepalive_ping.txt
             git config --local user.email "action@github.com"
