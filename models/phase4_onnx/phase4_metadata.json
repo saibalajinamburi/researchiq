@@ -1,0 +1,14 @@
+{
+  "source_model": "models\\phase3_final\\best_model.joblib",
+  "onnx_model": "models\\phase4_onnx\\best_model.onnx",
+  "int8_model": null,
+  "quantized": false,
+  "quantization_error": "Failed to find proper ai.onnx domain",
+  "n_features": 384,
+  "verification_sample_size": 1000,
+  "onnx_sklearn_label_agreement": 1.0,
+  "int8_sklearn_label_agreement": null,
+  "onnxruntime_providers": [
+    "CPUExecutionProvider"
+  ]
+}

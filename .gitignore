@@ -24,4 +24,9 @@ scratch_*.py
 
 # Prevent massive uploads
 .dvc/cache/
-models/
+models/*
+!models/phase3_final/
+!models/phase3_final/best_model.joblib
+!models/phase4_onnx/
+!models/phase4_onnx/best_model.onnx
+!models/phase4_onnx/phase4_metadata.json

@@ -1,0 +1,27 @@
+{
+  "model_name": "logreg_ovr",
+  "run_id": "2ea097cfd2304057a0c98e81582794ee",
+  "macro_f1": 0.6655150170382823,
+  "classes": [
+    "astro-ph.CO",
+    "astro-ph.GA",
+    "astro-ph.HE",
+    "cs.AI",
+    "cs.CL",
+    "cs.CV",
+    "cs.LG",
+    "cs.NE",
+    "cs.RO",
+    "math.PR",
+    "math.ST",
+    "physics.comp-ph",
+    "q-bio.NC",
+    "q-bio.QM",
+    "stat.ML"
+  ],
+  "n_samples": 42186,
+  "n_features": 384,
+  "sample_size": "full",
+  "source_experiment": "researchiq_phase3_final",
+  "comparison_path": "reports\\phase3_final_model_comparison.csv"
+}
