@@ -1,0 +1,81 @@
+name: Keep-Alive Ping
+
+on:
+  schedule:
+    # Run every 12 hours - well within the 48-hour HF sleep timeout
+    - cron: '0 6,18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restart Sleeping Spaces via HF API
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "WARNING: HF_TOKEN secret not set - skipping restart check"
+            exit 0
+          fi
+
+          SPACES=("saibalajiomg/customercore" "saibalajiomg/SupportPulse" "saibalajiomg/researchiq")
+          for SPACE in "${SPACES[@]}"; do
+            echo "--- Checking $SPACE ---"
+            STATUS=$(curl -s -H "Authorization: Bearer $HF_TOKEN" \
+              "https://huggingface.co/api/spaces/$SPACE" | python3 -c "
+          import sys, json
+          try:
+              data = json.load(sys.stdin)
+              stage = data.get('runtime', {}).get('stage', 'UNKNOWN')
+              print(stage)
+          except:
+              print('UNKNOWN')
+          ")
+            echo "  Current status: $STATUS"
+
+            if [ "$STATUS" != "RUNNING" ]; then
+              echo "  Space is not running ($STATUS). Restarting via API..."
+              curl -s -X POST \
+                -H "Authorization: Bearer $HF_TOKEN" \
+                "https://huggingface.co/api/spaces/$SPACE/restart"
+              echo "  Restart request sent. Waiting 30s for boot..."
+              sleep 30
+            else
+              echo "  Space is running - OK"
+            fi
+          done
+
+      - name: Ping CustomerCore
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-customercore.hf.space/api/v1/keep-alive)
+          echo "CustomerCore responded with HTTP code: $RESPONSE"
+
+      - name: Ping SupportPulse
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-supportpulse.hf.space/)
+          echo "SupportPulse responded with HTTP code: $RESPONSE"
+
+      - name: Ping ResearchIQ
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://saibalajiomg-researchiq.hf.space/)
+          echo "ResearchIQ responded with HTTP code: $RESPONSE"
+
+      - name: Prevent GitHub Workflow Suspension
+        run: |
+          # On Sundays, write a timestamp and commit it.
+          # This resets GitHub's 60-day inactivity timer for scheduled workflows.
+          if [ "$(date +%u)" -eq 7 ]; then
+            echo "Keep-alive tick: $(date -u)" > keepalive_ping.txt
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add keepalive_ping.txt
+            git commit -m "chore: weekly keep-alive tick [skip ci]" || exit 0
+            git push
+          fi
